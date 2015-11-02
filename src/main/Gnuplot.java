@@ -1,8 +1,6 @@
 package main;
 
-import elements.Element;
-import utils.Functions;
-import utils.Settings;
+import model.Settings;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -40,12 +38,13 @@ public class Gnuplot {
             return;
         }
         try {
+            // TODO
             PrintWriter script = new PrintWriter(directory + scriptName);
             String scriptCode = "set terminal x11 size 1360, 700\n" +
                     "set title 'Result'\n" +
                     "set xlabel \"X\"\n" +
                     "set ylabel \"Y\"\n" +
-                    "set xrange [" + settings.getLeftX() + ":" + settings.getRightX() + "]\n" +
+                    "set xrange [" + 0 + ":" + 100 + "]\n" +
                     "set yrange [" + min + ":" + max + "]\n" +
                     "set grid\n" + "plot ";
             for (int i = 0; i < fileNames.size() - 1; ++i) {
@@ -62,8 +61,8 @@ public class Gnuplot {
     }
 
     public void printToFileAnalytic(List <Double> y2, String filename, String title) {
-        Double min = Functions.getMin(y2);
-        Double max = Functions.getMax(y2);
+//        Double min = Functions.getMin(y2);
+//        Double max = Functions.getMax(y2);
 
         if (this.min == null || this.min > min) {
             this.min = min;
@@ -75,8 +74,8 @@ public class Gnuplot {
 
         try {
             PrintWriter file = new PrintWriter(directory + filename);
-            Double step = (settings.getRightX() - settings.getLeftX()) / (y2.size() - 1);
-            Double position = settings.getLeftX();
+            Double step = 0.0;//(settings.getRightX() - settings.getLeftX()) / (y2.size() - 1);
+            Double position = 0.0;//settings.getLeftX();
             for (int i = 0; i < y2.size(); ++i) {
                 file.println(" " + (position + i * step)+ ' ' + y2.get(i));
             }
@@ -90,35 +89,35 @@ public class Gnuplot {
 
     }
 
-    public void printToFile(List<Element> y2, String filename, String title) {
-        Double min = Functions.getMinFromElements(y2);
-        Double max = Functions.getMaxFromElements(y2);
-
-        if (this.min == null || this.min > min) {
-            this.min = min;
-        }
-
-        if (this.max == null || this.max < max) {
-            this.max = max;
-        }
-
-        try {
-            PrintWriter file = new PrintWriter(directory + filename);
-            Double step = y2.get(0).getLength() / (y2.get(0).getValues().size() - 1);
-            file.println(" " + y2.get(0).getLeft() + ' ' + y2.get(0).getValues().get(0));
-            for (Element el: y2) {
-                List <Double> temp = el.getValues();
-                Double left = el.getLeft();
-                for (int i = 1; i < temp.size(); ++i) {
-                    file.println(" " + (left + (i * step)) + ' ' + temp.get(i));
-                }
-            }
-            file.close();
-            fileNames.add(filename);
-            titles.add(title);
-        } catch (FileNotFoundException e) {
-            System.out.println(e);
-            System.out.println("Error while saving file.");
-        }
-    }
+//    public void printToFile(List<Element> y2, String filename, String title) {
+//        Double min = Functions.getMinFromElements(y2);
+//        Double max = Functions.getMaxFromElements(y2);
+//
+//        if (this.min == null || this.min > min) {
+//            this.min = min;
+//        }
+//
+//        if (this.max == null || this.max < max) {
+//            this.max = max;
+//        }
+//
+//        try {
+//            PrintWriter file = new PrintWriter(directory + filename);
+//            Double step = y2.get(0).getLength() / (y2.get(0).getValues().size() - 1);
+//            file.println(" " + y2.get(0).getLeft() + ' ' + y2.get(0).getValues().get(0));
+//            for (Element el: y2) {
+//                List <Double> temp = el.getValues();
+//                Double left = el.getLeft();
+//                for (int i = 1; i < temp.size(); ++i) {
+//                    file.println(" " + (left + (i * step)) + ' ' + temp.get(i));
+//                }
+//            }
+//            file.close();
+//            fileNames.add(filename);
+//            titles.add(title);
+//        } catch (FileNotFoundException e) {
+//            System.out.println(e);
+//            System.out.println("Error while saving file.");
+//        }
+//    }
 }

@@ -19,13 +19,13 @@ public class MathModel {
         this.diod = diod;
     }
 
-    public List <List <Double>> getAMatrix(double dt) {
+    public List <List <Double>> getAMatrix(double dt, double deltaU) {
         int size = 19;
         List <List <Double>> result = new ArrayList<>(size);
 
         List <Double> zeroMas = initZero(size);
 
-        double a = diod.getMultiplier();
+        double a = diod.getMultiplier(deltaU);
         double b = -1.0 / dt;
 
         List <Double> duc4dt = new ArrayList<>(zeroMas);
@@ -96,7 +96,7 @@ public class MathModel {
 
         List <Double> Iry = new ArrayList<>(zeroMas);
         Iry.set(4, 1.0);
-        Iry.set(12, -diod.getRy());
+        Iry.set(12, -diod.Ry());
         result.add(Iry);
 
         List <Double> Iid = new ArrayList<>(zeroMas);
@@ -106,7 +106,7 @@ public class MathModel {
         result.add(Iid);
 
         List <Double> Ird = new ArrayList<>(zeroMas);
-        Ird.set(14, -diod.getRr());
+        Ird.set(14, -diod.Rr());
         Ird.set(6, 1.0);
         result.add(Ird);
 
@@ -120,7 +120,7 @@ public class MathModel {
         result.add(Uc4);
 
         List <Double> Ucd = new ArrayList<>(zeroMas);
-        Ucd.set(2, diod.getC());
+        Ucd.set(2, diod.C());
         Ucd.set(9, -1.0);
         result.add(Ucd);
 
