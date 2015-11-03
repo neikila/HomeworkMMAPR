@@ -11,12 +11,22 @@ public class MathModel {
     private double L3;
     private double R4;
     private Diod diod;
+    private Eds eds;
 
-    public MathModel(double c4, double l3, double r4, Diod diod) {
+    public MathModel(double c4, double l3, double r4, Diod diod, Eds eds) {
         C4 = c4;
         L3 = l3;
         R4 = r4;
         this.diod = diod;
+        this.eds = eds;
+    }
+
+    public MathModel(Settings settings) {
+        C4 = settings.c4();
+        L3 = settings.l3();
+        R4 = settings.r4();
+        diod = settings.diod();
+        eds = settings.eds();
     }
 
     public List <List <Double>> getAMatrix(double dt, double deltaU) {
@@ -140,8 +150,33 @@ public class MathModel {
         return initList;
     }
 
-    public List <Double> getBMatrix(List <Double> approximate) {
+    public List <Double> getBMatrix(XVector approximate, XVector previous, double time) {
+        List <Double> result = new ArrayList<>();
 
-        return null;
+        result.add(approximate.dUc4dt() - (approximate.Uc4() - previous.Uc4()));
+        result.add(approximate.dIl3dt() - (approximate.Il3() - previous.Il3()));
+        result.add(approximate.dUcddt() - (approximate.Ucd() - previous.Ucd()));
+
+        result.add(approximate.Ul3() - approximate.Uc4());
+        result.add(approximate.Ury() - approximate.Ucd());
+        result.add(approximate.Uid() - approximate.Ucd());
+        result.add(approximate.Urd() + approximate.Ue() -
+                approximate.Uc4() + approximate.Ucd() - approximate.Ur4());
+        result.add(approximate.Ie() - approximate.Ird());
+        result.add(approximate.Ic4() + approximate.Il3() + approximate.Ird());
+        result.add(approximate.Icd() + approximate.Iry() +
+                approximate.Iid() - approximate.Ird());
+        result.add(approximate.Ir4() + approximate.Ird());
+
+        result.add(L3 * approximate.dIl3dt() - approximate.Ul3());
+        result.add(approximate.Ury() - approximate.Iry() * diod.Ry());
+        result.add(approximate.Iid() - diod.getI(approximate.Urd() + approximate.Ury()));
+        result.add(approximate.Urd() - approximate.Ird() * diod.Rr());
+        result.add(approximate.Ue() - eds.E(time));
+        result.add(C4 * approximate.dUc4dt() - approximate.Ic4());
+        result.add(diod.C() * approximate.dUcddt() - approximate.Icd());
+        result.add(approximate.Ur4() - approximate.Ir4() * R4);
+
+        return result;
     }
 }

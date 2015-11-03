@@ -57,6 +57,12 @@ public class Gaus {
         b.set(startFrom, b.get(startFrom) / divider);
     }
 
+    public static void test(List <Double> test) {
+        for (Double e: test) {
+            System.out.println(e);
+        }
+    }
+
     private static void differ(List <Double> base, List <Double> toEdit, int startFrom) {
         Double multiplier = toEdit.get(startFrom);
         for (int i = startFrom; i < toEdit.size(); ++i) {
