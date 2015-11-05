@@ -44,7 +44,7 @@ class Solver {
 
     private def checkIfEnd(delta: java.util.List[java.lang.Double]): Boolean = {
       var result = true
-      for (i <- 0 to delta.size(); result)
+      for (i <- 0 to delta.size() if result)
         if (delta.get(i) >= 0.001)
           result = false
       if (!result) {

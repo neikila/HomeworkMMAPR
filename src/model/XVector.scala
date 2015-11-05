@@ -6,11 +6,11 @@ import java.util
  * Created by neikila on 02.11.15.
  */
 class XVector (var list: java.util.List[java.lang.Double]){
+
   def this() = {
     this({
       var temp1 = new util.ArrayList[java.lang.Double]()
-      if (temp1.size() == 0)
-        for (i <- 0 until 19) temp1.add(0.0)
+      for (i <- 0 until 19) temp1.add(0.0)
       temp1
     })
   }
