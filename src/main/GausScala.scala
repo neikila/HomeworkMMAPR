@@ -15,6 +15,7 @@ object GausScala {
           val temp = A(k)
           A(k) = A(i)
           A(i) = temp
+
           val temp2 = B(i)
           B(i) = B(k)
           B(k) = temp2
@@ -32,8 +33,9 @@ object GausScala {
       }
     }
 
-    for (k <- (0 until A.length).reverse; i <- 0 to (k - 1)) { B(i) -= B(k) * A(i)(k); A(i)(k) = 0 }
+    for (k <- (0 until A.length).reverse; i <- 0 to (k - 1)) {
+      B(i) -= B(k) * A(i)(k)
+      A(i)(k) = 0
+    }
   }
-
-  def swap[A,B](a: A, b: B): (B, A) = (b, a)
 }

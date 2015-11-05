@@ -11,4 +11,6 @@ class Settings {
   val r4: Double = 1
   val diod: Diod = new Diod(0, 0, 0, 0, 0)
   val eds: Eds = new Eds(1, 1)
+
+  val deadline = 4.0
 }

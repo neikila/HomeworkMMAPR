@@ -1,11 +1,19 @@
 package model
 
-import java.{util, lang}
+import java.util
 
 /**
  * Created by neikila on 02.11.15.
  */
-class XVector (list: util.ArrayList[java.lang.Double] = {val temp = new util.ArrayList[java.lang.Double](18); for (i <- 0 until 18) temp.add(0.0); temp}){
+class XVector (var list: java.util.List[java.lang.Double]){
+  def this() = {
+    this({
+      var temp1 = new util.ArrayList[java.lang.Double]()
+      if (temp1.size() == 0)
+        for (i <- 0 until 19) temp1.add(0.0)
+      temp1
+    })
+  }
 
   def dUc4dt()  =  list.get(0)
   def dIl3dt()  =  list.get(1)
@@ -27,7 +35,28 @@ class XVector (list: util.ArrayList[java.lang.Double] = {val temp = new util.Arr
   def Ucd()     =  list.get(17)
   def Ur4()     =  list.get(18)
 
+  def getDeltaU = Ury + Urd
+
   def get(i: Int) = {
     list.get(i)
+  }
+
+  def + (vector: XVector) = {
+    val addList = vector.list
+    new XVector({
+      var temp = new util.ArrayList[java.lang.Double]()
+      for (i <- 0 to list.size())
+        temp.add(list.get(i) + addList.get(i))
+      temp
+    })
+  }
+
+  def += (vector: java.util.List[java.lang.Double]) {
+    for (i <- 0 to list.size())
+      list.set(i ,list.get(i) + vector.get(i))
+  }
+
+  def += (vector: XVector) {
+    this += vector.list
   }
 }
