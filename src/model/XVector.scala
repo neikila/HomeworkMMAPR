@@ -45,14 +45,14 @@ class XVector (var list: java.util.List[java.lang.Double]){
     val addList = vector.list
     new XVector({
       var temp = new util.ArrayList[java.lang.Double]()
-      for (i <- 0 to list.size())
+      for (i <- 0 until list.size())
         temp.add(list.get(i) + addList.get(i))
       temp
     })
   }
 
   def += (vector: java.util.List[java.lang.Double]) {
-    for (i <- 0 to list.size())
+    for (i <- 0 until list.size())
       list.set(i ,list.get(i) + vector.get(i))
   }
 

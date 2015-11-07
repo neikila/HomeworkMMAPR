@@ -13,21 +13,22 @@ class Solver {
   val settings = new Settings
   val model = new MathModel(settings)
 
-  private var resultSolution = ArrayBuffer[XVector](new XVector)
+  protected var resultSolution = ArrayBuffer[(Double, XVector)]((0.0, new XVector))
+  def result = resultSolution
 
-  private var time = 0.0
-  private var dt = 0.001
+  protected var time = 0.0
+  protected var dt = math.pow(10, -7) * 5
 
   def solve(): Unit = {
     while (time < settings.deadline) {
-      resultSolution += new Step(resultSolution head).calculate
       time += dt
+      resultSolution += ((time, new Step(resultSolution.last._2).calculate))
     }
   }
 
-  class Step (private var previousStep: XVector){
+  class Step (private val previousStep: XVector){
     private var iterationNum = 0
-    private var iterationApproximation = previousStep
+    private var iterationApproximation = new XVector(new util.ArrayList(previousStep.list))
 
     def calculate = {
       var B: java.util.List[java.lang.Double] = new util.ArrayList[java.lang.Double]()
@@ -44,7 +45,7 @@ class Solver {
 
     private def checkIfEnd(delta: java.util.List[java.lang.Double]): Boolean = {
       var result = true
-      for (i <- 0 to delta.size() if result)
+      for (i <- 0 until delta.size() if result)
         if (delta.get(i) >= 0.001)
           result = false
       if (!result) {
@@ -52,7 +53,7 @@ class Solver {
           iterationNum += 1
         } else {
           dt /= 2
-          iterationApproximation = previousStep
+          iterationApproximation = new XVector(new util.ArrayList(previousStep.list))
           iterationNum = 0
         }
       }

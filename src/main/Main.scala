@@ -12,6 +12,10 @@ import scala.collection.mutable.ArrayBuffer
 object Main {
   def main(args: Array[String]) {
     println("Hello, world")
+    val solver = new Solver
+    solver.solve()
+    val gnuplot = new GnuplotScala(solver.result.toArray)
+    gnuplot.printAll()
 //    val temp1 = ArrayBuffer[Double] (1.0, 2.0, 3.0)
 //    val temp2 = ArrayBuffer(4.0, 4.0, 2.0)
 //    val A = ArrayBuffer(temp1, ArrayBuffer(1.0, 2.0, 0.0), temp2)
