@@ -11,7 +11,7 @@ class GnuplotScala (val results: Array[(Double, XVector)]){
   val directory = "out/"
 
   def printAll(): Unit = {
-    printToFile("dIl3dt", (x: XVector) => x.dIl3dt())
+    printToFile("Il3", (x: XVector) => x.Il3())
   }
 
   def printToFile(fileName: String, f: (XVector) => Double): Unit = {

@@ -1,6 +1,6 @@
 package model
 
-import java.util
+import java.{lang, util}
 
 import main.Gaus
 
@@ -20,9 +20,17 @@ class Solver {
   protected var dt = math.pow(10, -7) * 5
 
   def solve(): Unit = {
+    var i = 0
     while (time < settings.deadline) {
-      time += dt
       resultSolution += ((time, new Step(resultSolution.last._2).calculate))
+      time += dt
+      i += 1
+      if (i % 100000 == 0) {
+        println(i)
+        println(time)
+      }
+//      print(resultSolution.last._2.list)
+//      println(time)
     }
   }
 
@@ -31,11 +39,11 @@ class Solver {
     private var iterationApproximation = new XVector(new util.ArrayList(previousStep.list))
 
     def calculate = {
-      var B: java.util.List[java.lang.Double] = new util.ArrayList[java.lang.Double]()
+      var B: java.util.List[java.lang.Double] = new util.ArrayList[lang.Double]()
       // iterations
       do {
         val A = model.getAMatrix(dt, iterationApproximation.getDeltaU)
-        B = model.getBMatrix(iterationApproximation, previousStep, time)
+        B = model.getBMatrix(iterationApproximation, previousStep, time, dt)
 
         Gaus.solve(A, B)
         iterationApproximation += B
@@ -45,14 +53,15 @@ class Solver {
 
     private def checkIfEnd(delta: java.util.List[java.lang.Double]): Boolean = {
       var result = true
-      for (i <- 0 until delta.size() if result)
-        if (delta.get(i) >= 0.001)
+      for (i <- 0 until delta.size())
+        if (math.abs(delta.get(i)) >= 0.001 && result)
           result = false
       if (!result) {
         if (iterationNum < 7) {
           iterationNum += 1
         } else {
           dt /= 2
+          println(dt)
           iterationApproximation = new XVector(new util.ArrayList(previousStep.list))
           iterationNum = 0
         }

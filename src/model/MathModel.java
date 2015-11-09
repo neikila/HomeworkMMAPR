@@ -35,7 +35,7 @@ public class MathModel {
 
         List <Double> zeroMas = initZero(size);
 
-        double a = diod.getMultiplier(deltaU);
+        double a = -diod.getMultiplier(deltaU);
         double b = -1.0 / dt;
 
         List <Double> duc4dt = new ArrayList<>(zeroMas);
@@ -69,10 +69,10 @@ public class MathModel {
         result.add(Uid);
 
         List <Double> Urd = new ArrayList<>(zeroMas);
-        Urd.set(6, 1.0);
-        Urd.set(15, 1.0);
+        Urd.set( 6,  1.0);
+        Urd.set(15,  1.0);
         Urd.set(16, -1.0);
-        Urd.set(17, 1.0);
+        Urd.set(17,  1.0);
         Urd.set(18, -1.0);
         result.add(Urd);
 
@@ -111,7 +111,6 @@ public class MathModel {
 
         List <Double> Iid = new ArrayList<>(zeroMas);
         Iid.set(4, a);
-        Iid.set(6, a);
         Iid.set(13, 1.0);
         result.add(Iid);
 
@@ -125,12 +124,12 @@ public class MathModel {
         result.add(Ue);
 
         List <Double> Uc4 = new ArrayList<>(zeroMas);
-        Uc4.set(0, C4);
-        Uc4.set(8, -1.0);
+        Uc4.set(0, 0.0);
+        Uc4.set(8, -1.0 * C4);
         result.add(Uc4);
 
         List <Double> Ucd = new ArrayList<>(zeroMas);
-        Ucd.set(2, diod.C());
+        Ucd.set(2, 1.0 * diod.C());
         Ucd.set(9, -1.0);
         result.add(Ucd);
 
@@ -150,12 +149,12 @@ public class MathModel {
         return initList;
     }
 
-    public List <Double> getBMatrix(XVector approximate, XVector previous, double time) {
+    public List <Double> getBMatrix(XVector approximate, XVector previous, double time, double dt) {
         List <Double> result = new ArrayList<>();
 
-        result.add(approximate.dUc4dt() - (approximate.Uc4() - previous.Uc4()));
-        result.add(approximate.dIl3dt() - (approximate.Il3() - previous.Il3()));
-        result.add(approximate.dUcddt() - (approximate.Ucd() - previous.Ucd()));
+        result.add(approximate.dUc4dt() - (approximate.Uc4() - previous.Uc4()) / dt);
+        result.add(approximate.dIl3dt() - (approximate.Il3() - previous.Il3()) / dt);
+        result.add(approximate.dUcddt() - (approximate.Ucd() - previous.Ucd()) / dt);
 
         result.add(approximate.Ul3() - approximate.Uc4());
         result.add(approximate.Ury() - approximate.Ucd());
@@ -173,9 +172,49 @@ public class MathModel {
         result.add(approximate.Iid() - diod.getI(approximate.Urd() + approximate.Ury()));
         result.add(approximate.Urd() - approximate.Ird() * diod.Rr());
         result.add(approximate.Ue() - eds.E(time));
-        result.add(C4 * approximate.dUc4dt() - approximate.Ic4());
-        result.add(diod.C() * approximate.dUcddt() - approximate.Icd());
+        result.add(approximate.dUc4dt() - approximate.Ic4() / C4);
+        result.add(approximate.dUcddt() - approximate.Icd() / diod.C());
         result.add(approximate.Ur4() - approximate.Ir4() * R4);
+
+        for (int i = 0; i < result.size(); ++i) {
+            result.set(i, -1 * result.get(i));
+        }
+
+        return result;
+    }
+
+    public List <Double> getBMatrix(XVectorJ approximate, XVectorJ previous, double time, double dt) {
+        List <Double> result = new ArrayList<>();
+
+        result.add(approximate.dUc4dt() - (approximate.Uc4() - previous.Uc4()) / dt);
+        result.add(approximate.dIl3dt() - (approximate.Il3() - previous.Il3()) / dt);
+        result.add(approximate.dUcddt() - (approximate.Ucd() - previous.Ucd()) / dt);
+
+        result.add(approximate.Ul3() - approximate.Uc4());
+        result.add(approximate.Ury() - approximate.Ucd());
+        result.add(approximate.Uid() - approximate.Ucd());
+        result.add(approximate.Urd() + approximate.Ue() -
+                approximate.Uc4() + approximate.Ucd() - approximate.Ur4());
+        result.add(approximate.Ie() - approximate.Ird());
+        result.add(approximate.Ic4() + approximate.Il3() + approximate.Ird());
+        result.add(approximate.Icd() + approximate.Iry() +
+                approximate.Iid() - approximate.Ird());
+        result.add(approximate.Ir4() + approximate.Ird());
+
+        result.add(L3 * approximate.dIl3dt() - approximate.Ul3());
+        result.add(approximate.Ury() - approximate.Iry() * diod.Ry());
+        System.out.println("Iid = " + approximate.Iid() + " Id = " + diod.getI(approximate.getDeltaU()));
+        System.out.println("Urd = " + approximate.Urd() + " Ury = " + approximate.Ury());
+        result.add(approximate.Iid() - diod.getI(approximate.getDeltaU()));
+        result.add(approximate.Urd() - approximate.Ird() * diod.Rr());
+        result.add(approximate.Ue() - eds.E(time + dt));
+        result.add(approximate.dUc4dt() * C4 - approximate.Ic4());
+        result.add(approximate.dUcddt() * diod.C() - approximate.Icd());
+        result.add(approximate.Ur4() - approximate.Ir4() * R4);
+
+        for (int i = 0; i < result.size(); ++i) {
+            result.set(i, -1 * result.get(i));
+        }
 
         return result;
     }

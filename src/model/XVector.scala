@@ -35,7 +35,7 @@ class XVector (var list: java.util.List[java.lang.Double]){
   def Ucd()     =  list.get(17)
   def Ur4()     =  list.get(18)
 
-  def getDeltaU = Ury + Urd
+  def getDeltaU = Ury
 
   def get(i: Int) = {
     list.get(i)
