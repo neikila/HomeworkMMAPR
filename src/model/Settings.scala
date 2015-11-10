@@ -13,4 +13,6 @@ class Settings {
   val eds: Eds = new Eds(2 * math.Pi * 10000, 10)
 
   val deadline = math.pow(10, -3)
+
+  val startDt = math.pow(10, -8) * 5
 }

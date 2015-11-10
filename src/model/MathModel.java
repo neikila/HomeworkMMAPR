@@ -180,38 +180,4 @@ public class MathModel {
 
         return result;
     }
-
-    public List <Double> getBMatrix(XVectorJ approximate, XVectorJ previous, double time, double dt) {
-        List <Double> result = new ArrayList<>();
-
-        result.add(approximate.dUc4dt() - (approximate.Uc4() - previous.Uc4()) / dt);
-        result.add(approximate.dIl3dt() - (approximate.Il3() - previous.Il3()) / dt);
-        result.add(approximate.dUcddt() - (approximate.Ucd() - previous.Ucd()) / dt);
-
-        result.add(approximate.Ul3() - approximate.Uc4());
-        result.add(approximate.Ury() - approximate.Ucd());
-        result.add(approximate.Uid() - approximate.Ucd());
-        result.add(approximate.Urd() + approximate.Ue() -
-                approximate.Uc4() + approximate.Ucd() - approximate.Ur4());
-        result.add(approximate.Ie() - approximate.Ird());
-        result.add(approximate.Ic4() + approximate.Il3() + approximate.Ird());
-        result.add(approximate.Icd() + approximate.Iry() +
-                approximate.Iid() - approximate.Ird());
-        result.add(approximate.Ir4() + approximate.Ird());
-
-        result.add(L3 * approximate.dIl3dt() - approximate.Ul3());
-        result.add(approximate.Ury() - approximate.Iry() * diod.Ry());
-        result.add(approximate.Iid() - diod.getI(approximate.getDeltaU()));
-        result.add(approximate.Urd() - approximate.Ird() * diod.Rr());
-        result.add(approximate.Ue() - eds.E(time + dt));
-        result.add(approximate.dUc4dt() * C4 - approximate.Ic4());
-        result.add(approximate.dUcddt() * diod.C() - approximate.Icd());
-        result.add(approximate.Ur4() - approximate.Ir4() * R4);
-
-        for (int i = 0; i < result.size(); ++i) {
-            result.set(i, -1 * result.get(i));
-        }
-
-        return result;
-    }
 }

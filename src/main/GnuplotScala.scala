@@ -11,7 +11,7 @@ import scala.collection.mutable.ArrayBuffer
  */
 class GnuplotScala (val results: Array[(Double, XVector)]){
   val directory = "out/"
-  val maxMinValues = ArrayBuffer[(String, Double, Double)]()
+  val maxMinValues = scala.collection.mutable.Map[String, (Double, Double)]()
   val Il3 = "Il3"
   val Ie = "Ie"
   val Ue = "Ue"
@@ -25,6 +25,7 @@ class GnuplotScala (val results: Array[(Double, XVector)]){
     printToFile(Ur4, (x: XVector) => x.Ur4())
     printToFile(Uc4, (x: XVector) => x.Uc4())
     printMinMaxValues
+    createGnuplotScript("asd", Array(Il3, Ie))
   }
 
   def printToFile(fileName: String, f: (XVector) => Double): Unit = {
@@ -40,13 +41,19 @@ class GnuplotScala (val results: Array[(Double, XVector)]){
         min = f(vector)
       }
     }
-    maxMinValues += ((fileName, max, min))
+    maxMinValues += (fileName -> (max, min))
     out.close()
   }
 
   def printMinMaxValues(): Unit = {
-    for ((filename, max, min) <- maxMinValues) {
+    for ((filename, (max, min)) <- maxMinValues) {
       println(filename + ": max: " + max + " min: " + min)
     }
+  }
+
+  def createGnuplotScript(filename: String, grapth: Array[String]): Unit = {
+    val (a, b) = maxMinValues.filterKeys((a: String) => grapth.contains(a)).unzip._2.unzip
+    println(a)
+    println(b)
   }
 }

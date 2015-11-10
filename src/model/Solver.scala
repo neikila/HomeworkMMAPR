@@ -17,7 +17,7 @@ class Solver {
   def result = resultSolution
 
   protected var time = 0.0
-  protected var dt = math.pow(10, -7) * 5
+  protected var dt = settings.startDt
 
   def solve(): Unit = {
     var i = 0
