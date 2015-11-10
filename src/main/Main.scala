@@ -21,11 +21,4 @@ object Main {
     val gnuplot = new GnuplotScala(solver.result.toArray)
     gnuplot.printAll()
   }
-
-  def javaStyle: Unit = {
-    println("Java style")
-    val solver = new SolverJ
-    solver.solve()
-    new GnuplotJ(solver.times, solver.resultSolution).printAll()
-  }
 }
