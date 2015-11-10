@@ -4,14 +4,27 @@ import java.io.PrintWriter
 
 import model.XVector
 
+import scala.collection.mutable.ArrayBuffer
+
 /**
  * Created by neikila on 05.11.15.
  */
 class GnuplotScala (val results: Array[(Double, XVector)]){
   val directory = "out/"
+  val maxMinValues = ArrayBuffer[(String, Double, Double)]()
+  val Il3 = "Il3"
+  val Ie = "Ie"
+  val Ue = "Ue"
+  val Ur4 = "Ur4"
+  val Uc4 = "Uc4"
 
   def printAll(): Unit = {
-    printToFile("Il3", (x: XVector) => x.Il3())
+    printToFile(Il3, (x: XVector) => x.Il3())
+    printToFile(Ie, (x: XVector) => x.Ie())
+    printToFile(Ue, (x: XVector) => x.Ue())
+    printToFile(Ur4, (x: XVector) => x.Ur4())
+    printToFile(Uc4, (x: XVector) => x.Uc4())
+    printMinMaxValues
   }
 
   def printToFile(fileName: String, f: (XVector) => Double): Unit = {
@@ -27,8 +40,13 @@ class GnuplotScala (val results: Array[(Double, XVector)]){
         min = f(vector)
       }
     }
-    println("Max = " + max)
-    println("Min = " + min)
+    maxMinValues += ((fileName, max, min))
     out.close()
+  }
+
+  def printMinMaxValues(): Unit = {
+    for ((filename, max, min) <- maxMinValues) {
+      println(filename + ": max: " + max + " min: " + min)
+    }
   }
 }

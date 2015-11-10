@@ -29,8 +29,6 @@ class Solver {
         println(i)
         println(time)
       }
-//      print(resultSolution.last._2.list)
-//      println(time)
     }
   }
 
