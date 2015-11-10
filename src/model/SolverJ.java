@@ -33,10 +33,10 @@ public class SolverJ {
             time += dt;
             times.add(time);
             i += 1;
-//            if (i % 100000 == 0) {
+            if (i % 10000 == 0) {
                 System.out.println(i);
                 System.out.println(time);
-//            }
+            }
         }
     }
 
@@ -53,16 +53,17 @@ public class SolverJ {
         public XVectorJ calculate() {
             List<Double> B;
             do {
+//                System.out.println("i = " + iterationNum);
                 List <List<Double>> A = model.getAMatrix(dt, iterationApproximation.getDeltaU());
                 B = model.getBMatrix(iterationApproximation, previousStep, time, dt);
-                for (List <Double> temp: A) {
-                    System.out.println(temp);
-                }
-                System.out.println("B = ");
-                System.out.println(B);
+//                for (List <Double> temp: A) {
+//                    System.out.println(temp);
+//                }
+//                System.out.println("B = ");
+//                System.out.println(B);
                 Gaus.solve(A, B);
-                System.out.println("Result");
-                System.out.println(B);
+//                System.out.println("Result");
+//                System.out.println(B);
                 iterationApproximation.add(B);
             } while (!checkIfEnd(B));
             return iterationApproximation;
@@ -79,7 +80,7 @@ public class SolverJ {
                     iterationNum += 1;
                 } else {
                     dt /= 2;
-                    System.out.println(dt);
+//                    System.out.println(dt);
                     iterationApproximation = new XVectorJ(new ArrayList<>(previousStep.list));
                     iterationNum = 0;
                 }

@@ -24,11 +24,21 @@ public class GnuplotJ {
 
     public void printToFile(String fileName) {
         try {
+            double max = result.get(0).Il3();
+            double min = result.get(0).Il3();
             PrintWriter out = new PrintWriter(directory + fileName);
             for (int i = 0; i < result.size(); ++i){
                 out.println(times.get(i) + " " + result.get(i).Il3());
+                if (max < result.get(i).Il3()) {
+                    max = result.get(i).Il3();
+                }
+                if (min > result.get(i).Il3()) {
+                    min = result.get(i).Il3();
+                }
             }
             out.close();
+            System.out.print("Max = " + max);
+            System.out.print("Min = " + min);
         } catch (Exception e) {
 
         }

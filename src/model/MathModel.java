@@ -33,42 +33,40 @@ public class MathModel {
         int size = 19;
         List <List <Double>> result = new ArrayList<>(size);
 
-        List <Double> zeroMas = initZero(size);
-
         double a = -diod.getMultiplier(deltaU);
         double b = -1.0 / dt;
 
-        List <Double> duc4dt = new ArrayList<>(zeroMas);
+        List <Double> duc4dt = new ArrayList<>(initZero(size));
         duc4dt.set(0, 1.0);
         duc4dt.set(16, b);
         result.add(duc4dt);
 
-        List <Double> dIl3dt = new ArrayList<>(zeroMas);
+        List <Double> dIl3dt = new ArrayList<>(initZero(size));
         dIl3dt.set(1, 1.0);
         dIl3dt.set(11, b);
         result.add(dIl3dt);
 
-        List <Double> dUcddt = new ArrayList<>(zeroMas);
+        List <Double> dUcddt = new ArrayList<>(initZero(size));
         dUcddt.set(2, 1.0);
         dUcddt.set(17, b);
         result.add(dUcddt);
 
-        List <Double> Ul3 = new ArrayList<>(zeroMas);
+        List <Double> Ul3 = new ArrayList<>(initZero(size));
         Ul3.set(3, 1.0);
         Ul3.set(16, -1.0);
         result.add(Ul3);
 
-        List <Double> Ury = new ArrayList<>(zeroMas);
+        List <Double> Ury = new ArrayList<>(initZero(size));
         Ury.set(4, 1.0);
         Ury.set(17, -1.0);
         result.add(Ury);
 
-        List <Double> Uid = new ArrayList<>(zeroMas);
+        List <Double> Uid = new ArrayList<>(initZero(size));
         Uid.set(5, 1.0);
         Uid.set(17, -1.0);
         result.add(Uid);
 
-        List <Double> Urd = new ArrayList<>(zeroMas);
+        List <Double> Urd = new ArrayList<>(initZero(size));
         Urd.set( 6,  1.0);
         Urd.set(15,  1.0);
         Urd.set(16, -1.0);
@@ -76,64 +74,64 @@ public class MathModel {
         Urd.set(18, -1.0);
         result.add(Urd);
 
-        List <Double> Ie = new ArrayList<>(zeroMas);
+        List <Double> Ie = new ArrayList<>(initZero(size));
         Ie.set(7, 1.0);
         Ie.set(14, -1.0);
         result.add(Ie);
 
-        List <Double> Ic4 = new ArrayList<>(zeroMas);
+        List <Double> Ic4 = new ArrayList<>(initZero(size));
         Ic4.set(8, 1.0);
         Ic4.set(11, 1.0);
         Ic4.set(14, 1.0);
         result.add(Ic4);
 
-        List <Double> Icd = new ArrayList<>(zeroMas);
+        List <Double> Icd = new ArrayList<>(initZero(size));
         Icd.set(9, 1.0);
         Icd.set(12, 1.0);
         Icd.set(13, 1.0);
         Icd.set(14, -1.0);
         result.add(Icd);
 
-        List <Double> Ir4 = new ArrayList<>(zeroMas);
+        List <Double> Ir4 = new ArrayList<>(initZero(size));
         Ir4.set(10, 1.0);
         Ir4.set(14, 1.0);
         result.add(Ir4);
 
-        List <Double> Il3 = new ArrayList<>(zeroMas);
+        List <Double> Il3 = new ArrayList<>(initZero(size));
         Il3.set(1, L3);
         Il3.set(3, -1.0);
         result.add(Il3);
 
-        List <Double> Iry = new ArrayList<>(zeroMas);
+        List <Double> Iry = new ArrayList<>(initZero(size));
         Iry.set(4, 1.0);
         Iry.set(12, -diod.Ry());
         result.add(Iry);
 
-        List <Double> Iid = new ArrayList<>(zeroMas);
+        List <Double> Iid = new ArrayList<>(initZero(size));
         Iid.set(4, a);
         Iid.set(13, 1.0);
         result.add(Iid);
 
-        List <Double> Ird = new ArrayList<>(zeroMas);
+        List <Double> Ird = new ArrayList<>(initZero(size));
         Ird.set(14, -diod.Rr());
         Ird.set(6, 1.0);
         result.add(Ird);
 
-        List <Double> Ue = new ArrayList<>(zeroMas);
+        List <Double> Ue = new ArrayList<>(initZero(size));
         Ue.set(15, 1.0);
         result.add(Ue);
 
-        List <Double> Uc4 = new ArrayList<>(zeroMas);
-        Uc4.set(0, 0.0);
-        Uc4.set(8, -1.0 * C4);
+        List <Double> Uc4 = new ArrayList<>(initZero(size));
+        Uc4.set(0, C4);
+        Uc4.set(8, -1.0);
         result.add(Uc4);
 
-        List <Double> Ucd = new ArrayList<>(zeroMas);
-        Ucd.set(2, 1.0 * diod.C());
+        List <Double> Ucd = new ArrayList<>(initZero(size));
+        Ucd.set(2, diod.C());
         Ucd.set(9, -1.0);
         result.add(Ucd);
 
-        List <Double> Ur4 = new ArrayList<>(zeroMas);
+        List <Double> Ur4 = new ArrayList<>(initZero(size));
         Ur4.set(10, -R4);
         Ur4.set(18, 1.0);
         result.add(Ur4);
@@ -169,11 +167,11 @@ public class MathModel {
 
         result.add(L3 * approximate.dIl3dt() - approximate.Ul3());
         result.add(approximate.Ury() - approximate.Iry() * diod.Ry());
-        result.add(approximate.Iid() - diod.getI(approximate.Urd() + approximate.Ury()));
+        result.add(approximate.Iid() - diod.getI(approximate.getDeltaU()));
         result.add(approximate.Urd() - approximate.Ird() * diod.Rr());
-        result.add(approximate.Ue() - eds.E(time));
-        result.add(approximate.dUc4dt() - approximate.Ic4() / C4);
-        result.add(approximate.dUcddt() - approximate.Icd() / diod.C());
+        result.add(approximate.Ue() - eds.E(time + dt));
+        result.add(approximate.dUc4dt() * C4 - approximate.Ic4());
+        result.add(approximate.dUcddt() * diod.C() - approximate.Icd());
         result.add(approximate.Ur4() - approximate.Ir4() * R4);
 
         for (int i = 0; i < result.size(); ++i) {
@@ -203,8 +201,6 @@ public class MathModel {
 
         result.add(L3 * approximate.dIl3dt() - approximate.Ul3());
         result.add(approximate.Ury() - approximate.Iry() * diod.Ry());
-        System.out.println("Iid = " + approximate.Iid() + " Id = " + diod.getI(approximate.getDeltaU()));
-        System.out.println("Urd = " + approximate.Urd() + " Ury = " + approximate.Ury());
         result.add(approximate.Iid() - diod.getI(approximate.getDeltaU()));
         result.add(approximate.Urd() - approximate.Ird() * diod.Rr());
         result.add(approximate.Ue() - eds.E(time + dt));

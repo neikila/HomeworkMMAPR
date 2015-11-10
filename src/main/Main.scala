@@ -11,7 +11,7 @@ import scala.collection.mutable.ArrayBuffer
  */
 object Main {
   def main(args: Array[String]): Unit = {
-    javaStyle
+    scalaStyle
   }
 
   def scalaStyle: Unit = {
