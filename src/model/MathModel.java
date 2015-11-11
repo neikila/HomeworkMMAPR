@@ -32,41 +32,42 @@ public class MathModel {
     public List <List <Double>> getAMatrix(double dt, double deltaU) {
         int size = 19;
         List <List <Double>> result = new ArrayList<>(size);
+        List <Double> zero = initZero(size);
 
         double a = -diod.getMultiplier(deltaU);
         double b = -1.0 / dt;
 
-        List <Double> duc4dt = new ArrayList<>(initZero(size));
+        List <Double> duc4dt = new ArrayList<>(zero);
         duc4dt.set(0, 1.0);
         duc4dt.set(16, b);
         result.add(duc4dt);
 
-        List <Double> dIl3dt = new ArrayList<>(initZero(size));
+        List <Double> dIl3dt = new ArrayList<>(zero);
         dIl3dt.set(1, 1.0);
         dIl3dt.set(11, b);
         result.add(dIl3dt);
 
-        List <Double> dUcddt = new ArrayList<>(initZero(size));
+        List <Double> dUcddt = new ArrayList<>(zero);
         dUcddt.set(2, 1.0);
         dUcddt.set(17, b);
         result.add(dUcddt);
 
-        List <Double> Ul3 = new ArrayList<>(initZero(size));
+        List <Double> Ul3 = new ArrayList<>(zero);
         Ul3.set(3, 1.0);
         Ul3.set(16, -1.0);
         result.add(Ul3);
 
-        List <Double> Ury = new ArrayList<>(initZero(size));
+        List <Double> Ury = new ArrayList<>(zero);
         Ury.set(4, 1.0);
         Ury.set(17, -1.0);
         result.add(Ury);
 
-        List <Double> Uid = new ArrayList<>(initZero(size));
+        List <Double> Uid = new ArrayList<>(zero);
         Uid.set(5, 1.0);
         Uid.set(17, -1.0);
         result.add(Uid);
 
-        List <Double> Urd = new ArrayList<>(initZero(size));
+        List <Double> Urd = new ArrayList<>(zero);
         Urd.set( 6,  1.0);
         Urd.set(15,  1.0);
         Urd.set(16, -1.0);
@@ -74,64 +75,64 @@ public class MathModel {
         Urd.set(18, -1.0);
         result.add(Urd);
 
-        List <Double> Ie = new ArrayList<>(initZero(size));
+        List <Double> Ie = new ArrayList<>(zero);
         Ie.set(7, 1.0);
         Ie.set(14, -1.0);
         result.add(Ie);
 
-        List <Double> Ic4 = new ArrayList<>(initZero(size));
+        List <Double> Ic4 = new ArrayList<>(zero);
         Ic4.set(8, 1.0);
         Ic4.set(11, 1.0);
         Ic4.set(14, 1.0);
         result.add(Ic4);
 
-        List <Double> Icd = new ArrayList<>(initZero(size));
+        List <Double> Icd = new ArrayList<>(zero);
         Icd.set(9, 1.0);
         Icd.set(12, 1.0);
         Icd.set(13, 1.0);
         Icd.set(14, -1.0);
         result.add(Icd);
 
-        List <Double> Ir4 = new ArrayList<>(initZero(size));
+        List <Double> Ir4 = new ArrayList<>(zero);
         Ir4.set(10, 1.0);
         Ir4.set(14, 1.0);
         result.add(Ir4);
 
-        List <Double> Il3 = new ArrayList<>(initZero(size));
+        List <Double> Il3 = new ArrayList<>(zero);
         Il3.set(1, L3);
         Il3.set(3, -1.0);
         result.add(Il3);
 
-        List <Double> Iry = new ArrayList<>(initZero(size));
+        List <Double> Iry = new ArrayList<>(zero);
         Iry.set(4, 1.0);
         Iry.set(12, -diod.Ry());
         result.add(Iry);
 
-        List <Double> Iid = new ArrayList<>(initZero(size));
+        List <Double> Iid = new ArrayList<>(zero);
         Iid.set(4, a);
         Iid.set(13, 1.0);
         result.add(Iid);
 
-        List <Double> Ird = new ArrayList<>(initZero(size));
+        List <Double> Ird = new ArrayList<>(zero);
         Ird.set(14, -diod.Rr());
         Ird.set(6, 1.0);
         result.add(Ird);
 
-        List <Double> Ue = new ArrayList<>(initZero(size));
+        List <Double> Ue = new ArrayList<>(zero);
         Ue.set(15, 1.0);
         result.add(Ue);
 
-        List <Double> Uc4 = new ArrayList<>(initZero(size));
+        List <Double> Uc4 = new ArrayList<>(zero);
         Uc4.set(0, C4);
         Uc4.set(8, -1.0);
         result.add(Uc4);
 
-        List <Double> Ucd = new ArrayList<>(initZero(size));
+        List <Double> Ucd = new ArrayList<>(zero);
         Ucd.set(2, diod.C());
         Ucd.set(9, -1.0);
         result.add(Ucd);
 
-        List <Double> Ur4 = new ArrayList<>(initZero(size));
+        List <Double> Ur4 = new ArrayList<>(zero);
         Ur4.set(10, -R4);
         Ur4.set(18, 1.0);
         result.add(Ur4);

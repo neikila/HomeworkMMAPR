@@ -52,7 +52,7 @@ class GnuplotScala (val results: Array[(Double, XVector)]){
   }
 
   def createGnuplotScript(filename: String, grapth: Array[String]): Unit = {
-    val (a, b) = maxMinValues.filterKeys((a: String) => grapth.contains(a)).unzip._2.unzip
+    val (a, b) = maxMinValues.filterKeys((a: String) => grapth.contains(a)).values.unzip
     println(a)
     println(b)
   }
