@@ -18,7 +18,7 @@ object Main {
     println("Scala style")
     val solver = new Solver
     solver.solve()
-    val gnuplot = new GnuplotScala(solver.result.toArray)
+    val gnuplot = new GnuplotScala(solver.result.toArray, solver.settings)
     gnuplot.printAll()
   }
 }

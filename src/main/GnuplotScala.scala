@@ -3,13 +3,14 @@ package main
 import java.io.PrintWriter
 
 import model.XVector
+import model.Settings
 
 import scala.collection.mutable.ArrayBuffer
 
 /**
  * Created by neikila on 05.11.15.
  */
-class GnuplotScala (val results: Array[(Double, XVector)]){
+class GnuplotScala (val results: Array[(Double, XVector)], val settings: Settings){
   val directory = "out/"
   val maxMinValues = scala.collection.mutable.Map[String, (Double, Double)]()
   val Il3 = "Il3"
@@ -24,8 +25,9 @@ class GnuplotScala (val results: Array[(Double, XVector)]){
     printToFile(Ue, (x: XVector) => x.Ue())
     printToFile(Ur4, (x: XVector) => x.Ur4())
     printToFile(Uc4, (x: XVector) => x.Uc4())
-    printMinMaxValues
-    createGnuplotScript("asd", Array(Il3, Ie))
+//    printMinMaxValues
+    createGnuplotScript("I_result.script", Array(Il3, Ie))
+    createGnuplotScript("U_result.script", Array(Ur4, Uc4, Ue))
   }
 
   def printToFile(fileName: String, f: (XVector) => Double): Unit = {
@@ -51,9 +53,27 @@ class GnuplotScala (val results: Array[(Double, XVector)]){
     }
   }
 
-  def createGnuplotScript(filename: String, grapth: Array[String]): Unit = {
-    val (a, b) = maxMinValues.filterKeys((a: String) => grapth.contains(a)).values.unzip
-    println(a)
-    println(b)
+  def createGnuplotScript(fileName: String, graph: Array[String]): Unit = {
+    val (a, b) = maxMinValues.filterKeys((a: String) => graph.contains(a)).values.unzip
+    val max = a.max
+    val min = b.min
+
+    val out = new PrintWriter(directory + fileName)
+    var scriptCode = "set terminal x11 size 1360, 700\n" +
+      "set title 'Result U'\n" +
+      "set xlabel 'X'\n" +
+      "set ylabel 'Y'\n" +
+      "set xrange [" + 0 + ":" + settings.deadline + "]\n" +
+      "set yrange [" + min + ":" + max + "]\n" +
+      "set grid\n" +
+      "plot "
+    for (i <- 0 until (graph.size - 1)) {
+      scriptCode += "'" + graph(i) + "' using 1:2 w l lw 2 title '" +
+        graph(i) + "',\\\n"
+    }
+    scriptCode += "'" + graph.last + "' using 1:2 w l lw 2 title '" + graph.last + "'\n" +
+      "pause -1";
+    out.print(scriptCode)
+    out.close()
   }
 }
