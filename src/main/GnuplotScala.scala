@@ -10,7 +10,7 @@ import scala.collection.mutable.ArrayBuffer
 /**
  * Created by neikila on 05.11.15.
  */
-class GnuplotScala (val results: Array[(Double, XVector)], val settings: Settings){
+class GnuplotScala (val results: Array[(Double, XVector, Double)], val settings: Settings){
   val directory = "out/"
   val maxMinValues = scala.collection.mutable.Map[String, (Double, Double)]()
   val Il3 = "Il3"
@@ -34,7 +34,7 @@ class GnuplotScala (val results: Array[(Double, XVector)], val settings: Setting
     val out = new PrintWriter(directory + fileName)
     var max = f(results(0)._2)
     var min = f(results(0)._2)
-    for ((time, vector) <- results) {
+    for ((time, vector, _) <- results) {
       out.println(time + " " + f(vector))
       if (f(vector) > max) {
         max = f(vector)
