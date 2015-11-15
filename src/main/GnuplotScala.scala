@@ -24,10 +24,10 @@ class GnuplotScala (val results: Array[(Double, XVector)], val settings: Setting
     printToFile(Ie, (x: XVector) => x.Ie())
     printToFile(Ue, (x: XVector) => x.Ue())
     printToFile(Ur4, (x: XVector) => x.Ur4())
-    printToFile(Uc4, (x: XVector) => x.Uc4())
+    printToFile(Uc4, (x: XVector) => x.Uc4() * 10 / 0.3)
 //    printMinMaxValues
-    createGnuplotScript("I_result.script", Array(Il3, Ie))
-    createGnuplotScript("U_result.script", Array(Ur4, Uc4, Ue))
+    createGnuplotScript("I_result.script", Array(Il3, Ie), "I, A", "Time, s")
+    createGnuplotScript("U_result.script", Array(Ur4, Uc4, Ue), "U, V", "Time, s")
   }
 
   def printToFile(fileName: String, f: (XVector) => Double): Unit = {
@@ -53,16 +53,15 @@ class GnuplotScala (val results: Array[(Double, XVector)], val settings: Setting
     }
   }
 
-  def createGnuplotScript(fileName: String, graph: Array[String]): Unit = {
+  def createGnuplotScript(fileName: String, graph: Array[String], YTitle: String, XTitle: String): Unit = {
     val (a, b) = maxMinValues.filterKeys((a: String) => graph.contains(a)).values.unzip
     val max = a.max
     val min = b.min
 
     val out = new PrintWriter(directory + fileName)
     var scriptCode = "set terminal x11 size 1360, 700\n" +
-      "set title 'Result U'\n" +
-      "set xlabel 'X'\n" +
-      "set ylabel 'Y'\n" +
+      "set xlabel '" + XTitle + "'\n" +
+      "set ylabel '" + YTitle + "'\n" +
       "set xrange [" + 0 + ":" + settings.deadline + "]\n" +
       "set yrange [" + min + ":" + max + "]\n" +
       "set grid\n" +
