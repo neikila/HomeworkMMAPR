@@ -15,4 +15,7 @@ class Settings {
   val deadline = math.pow(10, -3)
 
   val startDt = math.pow(10, -8) * 5
+
+  val highLevel = 0.01
+  val lowLevel = 0.001
 }

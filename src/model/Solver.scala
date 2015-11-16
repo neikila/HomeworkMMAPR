@@ -15,6 +15,7 @@ class Solver {
 
   protected var time = 0.0
   protected var dt = settings.startDt
+  protected var lastdt = dt
 
   protected var resultSolution = ArrayBuffer[(Double, XVector, Double)]((0.0, new XVector, dt))
   def result = resultSolution
@@ -24,10 +25,11 @@ class Solver {
     while (time < settings.deadline) {
       resultSolution += ((time, new Step(resultSolution.last._2).calculate, dt))
       time += dt
+      lastdt = dt
       i += 1
       if (i % 100000 == 0) {
-        println(i)
-        println(time)
+        println("i = " + i)
+        println("Time = " + time)
       }
     }
   }
@@ -55,25 +57,35 @@ class Solver {
         if (math.abs(delta.get(i)) >= 0.001)
           result = false
       if (!result) {
-        if (iterationNum > 6 || false) {
-          // TODO temp
+        if (iterationNum > 6) {
           dt /= 2
           println(dt)
           iterationApproximation = new XVector(new util.ArrayList(previousStep.list))
           iterationNum = 0
-        }
-        if (iterationNum < 7) {
+        } else {
           iterationNum += 1
         }
+      } else {
+        if (resultSolution.size > 2)
+          result = analyzeDeviation(new XVector(delta))
       }
       result
     }
 
     private def analyzeDeviation(xVector: XVector): Boolean = {
-      val f1 = resultSolution(resultSolution.length - 2)._2.Ue()
-      math.abs(settings.startDt / (settings.startDt + dt)) * ((1 + 2) - settings.startDt / dt * 1)
-      // TODO
-      true
+      val fprev = resultSolution(resultSolution.length - 2)._2.Ue()
+      val flast = resultSolution(resultSolution.length - 1)._2.Ue()
+      val fcur = settings.eds.E(time + dt)
+      val epsilon = math.abs((dt / (dt + lastdt)) * (fcur - flast - (dt / lastdt) * (flast - fprev)))
+      if (epsilon > settings.highLevel) {
+        dt /= 2
+        false
+      } else {
+        if (epsilon < settings.lowLevel && dt < 0.0000001) {
+          dt *= 2
+        }
+        true
+      }
     }
   }
 }
